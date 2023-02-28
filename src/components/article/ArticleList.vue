@@ -4,8 +4,8 @@
       <el-row :gutter="15">
         <el-col :span="6">
           <el-input
-            v-model="searchData.name"
-            placeholder="用户名"
+            v-model="searchData.title"
+            placeholder="文章名"
             @change="searchArticle()"
             clearable=""
           >
@@ -13,65 +13,22 @@
           </el-input>
         </el-col>
         <el-col :span="6"
-          ><el-button type="primary" @click="addArticleFormVisible = true"
+          ><el-button type="primary" @click="addArticle()"
             >新增</el-button
           ></el-col
         >
       </el-row>
 
-      <!-- // 添加用户的对话框 -->
-      <el-dialog
-        title="添加用户"
-        :visible.sync="addArticleFormVisible"
-        width="500px"
-        @close="addArticlelogClose"
-      >
-        <el-form :model="addArticleData" :rules="addArticleRules" ref="addArticleRef">
-          <el-form-item label="用户名" label-width="20%" prop="title">
-            <el-input
-              v-model="addArticleData.title"
-              autocomplete="off"
-              v-on:keyup.enter.native="addArticle()"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="密码" label-width="20%" prop="password">
-            <el-input
-              v-on:keyup.enter.native="addArticle()"
-              v-model="addArticleData.password"
-              type="password"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="用户权限" label-width="20%" prop="role">
-            <el-select v-model="addArticleData.role" placeholder="选择用户权限">
-              <el-option
-                v-for="(item, index) in bannerRole"
-                :key="index"
-                :label="item.name"
-                :value="item.id * 1"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="addArticleFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addArticle()">确 定</el-button>
-        </div>
-      </el-dialog>
-      <!-- 用户列表 -->
+
+      <!-- 文章列表 -->
       <el-table :data="tableData" style="width: 100%" border="" stripe="">
         <el-table-column prop="ID" label="ID"></el-table-column>
-        <el-table-column prop="title" label="用户名"></el-table-column>
-        <el-table-column label="角色">
-          <template slot-scope="scope">
-            <div>
-              {{ scope.row.role >= 1 ? "读者" : "管理员" }}
-            </div>
-          </template>
-        </el-table-column>
+        <el-table-column prop="title" label="文章标题"></el-table-column>
+        <el-table-column prop="desc" label="文章描述"></el-table-column>
+        <el-table-column prop="Category.name" label="文章分类"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="clickEdit(scope.row)"
+            <el-button type="text" size="small" @click="$router.push(`addArticle/${scope.row.ID}`)"
               >编辑</el-button
             >
             <el-button @click="deleteArticle(scope.row)" type="text" size="small"
@@ -92,22 +49,22 @@
         >
         </el-pagination>
       </div>
-      <!--  编辑用户的对话框 -->
+      <!--  编辑文章的对话框 -->
       <el-dialog
-        title="修改用户"
+        title="修改文章"
         :visible.sync="editArticleFormVisible"
         width="500px"
         @close="editArticlelogClose()"
       >
         <el-form :model="editArticleData" :rules="editArticleRules" ref="editArticleRef">
-          <el-form-item label="用户名" label-width="20%" prop="title">
+          <el-form-item label="文章名" label-width="20%" prop="title">
             <el-input
               v-model="editArticleData.title"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="用户权限" label-width="20%" prop="role">
-            <el-select v-model="editArticleData.role" placeholder="选择用户权限">
+          <el-form-item label="文章权限" label-width="20%" prop="role">
+            <el-select v-model="editArticleData.role" placeholder="选择文章权限">
               <el-option
                 v-for="(item, index) in bannerRole"
                 :key="index"
@@ -130,32 +87,32 @@
 export default {
   data() {
     return {
-      // 获取用户列表时的参数
+      // 获取文章列表时的参数
       searchData: {
-        name: "",
+        title: "",
         pageSize: 6,
         pageNum: 1,
       },
-      // 获取的用户列表
+      // 获取的文章列表
       tableData: [],
-      // 获取的用户总数
+      // 获取的文章总数
       total: 0,
       // 是否打开对话框
       addArticleFormVisible: false,
       editArticleFormVisible: false,
-      // 添加用户的信息
+      // 添加文章的信息
       addArticleData: {
         title: "",
         password: "",
         role: 1,
       },
-      // 修改用户的信息
+      // 修改文章的信息
       editArticleData: {
         ID: 0,
         title: "",
         role: 1,
       },
-      // 用户权限选择的选项
+      // 文章权限选择的选项
       bannerRole: [
         {
           id: 0,
@@ -166,10 +123,10 @@ export default {
           name: "读者",
         },
       ],
-      // 添加用户表单的规则
+      // 添加文章表单的规则
       addArticleRules: {
         title: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: "请输入文章名", trigger: "blur" },
           {
             min: 3,
             max: 10,
@@ -187,10 +144,10 @@ export default {
           },
         ],
       },
-      // 修改用户表单的规则
+      // 修改文章表单的规则
       editArticleRules: {
         title: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: "请输入文章名", trigger: "blur" },
           {
             min: 3,
             max: 10,
@@ -213,21 +170,22 @@ export default {
       console.log(res);
       this.total = res.total;
     },
-    // 仅在输入框失去焦点或用户按下回车时触发
+    // 仅在输入框失去焦点或文章按下回车时触发
     searchArticle() {
       this.getArticleList();
     },
-    // 点击删除用户按钮函数
     deleteArticle(article) {
+    // 点击删除文章按钮函数
+      console.log(article)
       this.$confirm("此操作将永久删除该文件, 是否继续？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          // 删除用户
+          // 删除文章
           const res = await this.$http.delete("article/delete", {
-            params: { name: article.title },
+            params: { id: article.ID },
           });
           if (res.data.state != 200) {
             return this.$message.error(res.data.message);
@@ -246,40 +204,10 @@ export default {
           });
         });
     },
-    // 当对话框关闭时调用
-    addArticlelogClose() {
-      this.$refs.addArticleRef.resetFields();
-    },
-    editArticlelogClose() {
-      this.$refs.editArticleRef.resetFields();
-    },
-    // 添加用户
+
+    // 添加文章
     addArticle() {
-      this.$refs.addArticleRef.validate(async (valid) => {
-        // 表单未通过验证
-        if (!valid) {
-          this.$message({
-            message: "格式错误",
-            type: "error",
-            duration: 1750,
-          });
-        } else {
-          // 通过验证，发送网络请求
-          const res = await this.$http.post("article/add", this.addArticleData);
-          console.log(res);
-          if (res.data.state != 200) {
-            this.$message.error(res.data.message);
-          } else {
-            this.$message({
-              message: "添加成功",
-              type: "success",
-              duration: 1750,
-            });
-            this.getArticleList();
-            this.addArticleFormVisible = false;
-          }
-        }
-      });
+     this.$router.push("addArticle")
     },
     // 点击编辑按钮
     clickEdit(article) {
@@ -291,36 +219,12 @@ export default {
         this.editArticleData.role = article.role;
       });
     },
-    // 修改用户
-    editArticle() {
-      this.$refs.editArticleRef.validate(async (valid) => {
-        if (!valid) {
-          // 表单验证未通过
-          this.$message({
-            message: "格式错误",
-            type: "error",
-            duration: 1750,
-          });
-        } else {
-          // 验证通过，发送网络请求
-          const { data: res } = await this.$http.post(
-            "article/edit",
-            this.editArticleData
-          );
-          // 查看返回信息
-          if (res.state != 200) {
-            this.$message.error(res.message);
-          } else {
-            this.$message({
-              message: "修改成功",
-              type: "success",
-              duration: 1750,
-            });
-            this.getArticleList();
-            this.editArticleFormVisible = false;
-          }
-        }
-      });
+    // 修改文章
+    editArticle(article) {
+      // this.$router.push({
+      //   name: "addArticle",
+        
+      // })
     },
     // table每页大小改变
     handleSizeChange(val) {

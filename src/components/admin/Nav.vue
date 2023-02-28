@@ -1,8 +1,8 @@
 <template>
-  <el-aside width="150px">
+  <el-aside width="200px">
     <el-row class="tac">
       <el-menu
-        default-active="1"
+        default-active=""
         router=""
         mode="vertical"
         class="el-menu-vertical-demo"
@@ -11,7 +11,7 @@
         active-text-color="#004d40"
       >
         <!-- 第一个标签  仪表盘 -->
-        <el-menu-item index="index" route="index">
+        <el-menu-item index="1" route="/admin/index">
           <template slot="title">
             <i class="el-icon-pie-chart"></i>
             <span>仪表盘</span>
@@ -26,24 +26,24 @@
           </template>
 
           <!-- 第二个标签 添加文章-->
-          <el-menu-item index="2-1" route="addArticle">
+          <el-menu-item index="2-1" route="/admin/addArticle">
             <i class="el-icon-edit"></i>
             <span>写文章</span>
           </el-menu-item>
           <!-- 第三个标签  文章列表 -->
-          <el-menu-item index="2-2" route="artList">
+          <el-menu-item index="2-2" route="/admin/artList">
             <i class="el-icon-document-copy"></i>
             <span>文章列表</span>
           </el-menu-item>
         </el-submenu>
 
         <!-- 第二个大标签（第四个标签） 文章分类 -->
-        <el-menu-item index="3" route="cateList">
+        <el-menu-item index="3" route="/admin/cateList">
           <i class="el-icon-menu"></i>
           <span slot="title">文章分类</span>
         </el-menu-item>
         <!-- 第三个大标签（第五个标签） 用户列表  -->
-        <el-menu-item index="4" route="userList">
+        <el-menu-item index="4" route="/admin/userList">
           <i class="el-icon-document"></i>
           <span slot="title">用户列表</span>
         </el-menu-item>
@@ -54,7 +54,13 @@
 
 <script>
 import "element-ui/lib/theme-chalk/display.css";
-export default {};
+export default {
+  data() {
+    return {
+      def:"2-1",
+    }
+  },
+};
 </script>
 
 <style></style>
