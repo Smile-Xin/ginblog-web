@@ -9,6 +9,16 @@ import AddArticle from "@/components/article/AddArticle";
 import ArticleList from "@/components/article/ArticleList";
 import CateList from "@/components/category/CateList";
 import UserList from "@/components/user/UserList";
+import Comment from "@/components/comment/commentList";
+import Profile from '@/components/user/Profile'
+
+// // 路由重复点击捕获错误
+// const originalPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push(location, onResolve, onReject) {
+//   if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+//   return originalPush.call(this, location).catch(err => err)
+// }
+
 
 Vue.use(VueRouter);
 
@@ -29,6 +39,8 @@ const routes = [
       { path: "artList", component: ArticleList },
       { path: "cateList", component: CateList },
       { path: "userList", component: UserList },
+      { path: "comment", component: Comment },
+      { path: "profile", component: Profile },
     ],
   },
 ];

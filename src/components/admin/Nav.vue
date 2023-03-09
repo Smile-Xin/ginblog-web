@@ -47,6 +47,16 @@
           <i class="el-icon-document"></i>
           <span slot="title">用户列表</span>
         </el-menu-item>
+        <!-- 评论管理  -->
+        <el-menu-item index="5" route="/admin/comment">
+          <i class="el-icon-document"></i>
+          <span slot="title">评论管理</span>
+        </el-menu-item>
+         <!-- 评论管理  -->
+        <el-menu-item index="6" route="/admin/profile">
+          <i class="el-icon-document"></i>
+          <span slot="title">个人简介</span>
+        </el-menu-item>
       </el-menu>
     </el-row>
   </el-aside>
